@@ -83,9 +83,29 @@ class BinOpAst():
         Reduce additive identities
         x + 0 = x
         """
-        # IMPLEMENT ME!
-        pass
-                        
+        # Two base cases, can't do any work if we're on num, just return.
+        if self.type == NodeType.number:
+            return
+
+        #call recursively on both children
+        additive_identity(self.left)
+        additive_identity(self.right)
+
+        # sort of a different base case, can't do anything with mult (*), but still need to call recursively.
+        if self.val == '*':
+            return
+        
+        # If the left is a 0, then replace current val with right val. If both are 0, will be handled by parent.
+        if self.left.val == 0:
+            self.val = self.val.right
+
+        # Vice versa above.
+        elif self.right.val == 0:
+            self.val = self.val.left
+
+        # Nothing more to do, return.
+        return
+
     def multiplicative_identity(self):
         """
         Reduce multiplicative identities
