@@ -97,11 +97,11 @@ class BinOpAst():
         
         # If the left is a 0, then replace current val with right val. If both are 0, will be handled by parent.
         if self.left.val == 0:
-            self.val = self.val.right
+            self = self.right
 
         # Vice versa above.
         elif self.right.val == 0:
-            self.val = self.val.left
+            self = self.left
 
         # Nothing more to do, return.
         return
@@ -147,6 +147,14 @@ class BinOpAst():
         self.mult_by_zero()
         self.constant_fold()
 
+
+class TreeOpTester(unittest.TestCase):
+    def test_additive_identity(self):
+        with open('./testbench/arith_id/inputs/simple', 'r') as input_file:
+            with open('./testbench/arith_id/outputs/simple', 'r') as output_file:
+                tree = BinOpAst(input_file.read().split())
+                tree.additive_identity()
+                self.assertEqual(tree.prefix_str(), output_file.read().split('\n')[0])
 
 if __name__ == "__main__":
     unittest.main()
