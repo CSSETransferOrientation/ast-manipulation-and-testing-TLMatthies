@@ -88,8 +88,8 @@ class BinOpAst():
             return
 
         #call recursively on both children
-        additive_identity(self.left)
-        additive_identity(self.right)
+        self.left.additive_identity()
+        self.right.additive_identity()
 
         # sort of a different base case, can't do anything with mult (*), but still need to call recursively.
         if self.val == '*':
