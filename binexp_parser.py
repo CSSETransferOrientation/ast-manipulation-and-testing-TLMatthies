@@ -154,14 +154,38 @@ class BinOpAst():
         self.mult_by_zero()
         self.constant_fold()
 
+from os.path import join as osjoin
+import os
 
 class TreeOpTester(unittest.TestCase):
-    def test_additive_identity(self):
-        with open('./testbench/arith_id/inputs/simple', 'r') as input_file:
-            with open('./testbench/arith_id/outputs/simple', 'r') as output_file:
-                tree = BinOpAst(input_file.read().split())
-                tree.additive_identity()
-                self.assertEqual(tree.prefix_str(), output_file.read().split('\n')[0])
+    def test_arith_id(self):
+        # be able to work with directories
+        input_files = osjoin('testbench/arith_id', 'inputs')
+        output_files = osjoin('testbench/arith_id', 'outputs')
+        
+        # iterate through sub files
+        for file_name in os.listdir(input_files):
+            # print out what tests are being run
+            print(f'testing {file_name}')
+
+            # read in the input files
+            current_file_inputs = open(osjoin(input_files, file_name))
+            input_to_test = current_file_inputs.read().strip()
+            current_file_inputs.close()
+
+            # read in the output files
+            current_file_outputs = open(osjoin(output_files, file_name))
+            expected_output = current_file_outputs.read().strip()
+            current_file_outputs.close()
+
+            # build tree and run additive_identity()
+            tree = BinOpAst(input_to_test.split())
+            tree.additive_identity()
+            actual_output = tree.prefix_str()
+
+            # test for correctness
+            assert actual_output == expected_output
+
 
 if __name__ == "__main__":
     unittest.main()
