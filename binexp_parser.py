@@ -96,14 +96,14 @@ class BinOpAst():
             return
         
         # If the left is a 0, then replace current val with right val. If both are 0, will be handled by parent.
-        if self.left.val == 0:
+        if self.left.val == '0':
             self.val = self.right.val
             self.type = self.right.type
             self.left = self.right.left
             self.right = self.right.right
 
         # Vice versa above.
-        elif self.right.val == 0:
+        elif self.right.val == '0':
             self.val = self.left.val
             self.type = self.left.type
             self.right = self.left.right
