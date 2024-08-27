@@ -118,9 +118,36 @@ class BinOpAst():
         Reduce multiplicative identities
         x * 1 = x
         """
-        # IMPLEMENT ME!
-        pass
-    
+        # Two base cases, can't do any work if we're on num, just return.
+        if self.type == NodeType.number:
+            return
+
+        #call recursively on both children
+        self.left.multiplicative_identity()
+        self.right.multiplicative_identity()
+
+        # sort of a different base case, can't do anything with mult (*), but still need to call recursively.
+        if self.val == '+':
+            return
+        
+        # If the left is a 0, then replace current val with right val. If both are 0, will be handled by parent.
+        if self.left.val == '1':
+            self.val = self.right.val
+            self.type = self.right.type
+            self.left = self.right.left
+            self.right = self.right.right
+
+        # Vice versa above.
+        elif self.right.val == '1':
+            self.val = self.left.val
+            self.type = self.left.type
+            self.right = self.left.right
+            self.left = self.left.left
+
+        # Nothing more to do, return.
+        return
+
+
     
     def mult_by_zero(self):
         """
@@ -159,6 +186,7 @@ import os
 
 class TreeOpTester(unittest.TestCase):
     def test_arith_id(self):
+        print("\nTesting arith_id")
         # be able to work with directories
         input_files = osjoin('testbench/arith_id', 'inputs')
         output_files = osjoin('testbench/arith_id', 'outputs')
@@ -193,6 +221,42 @@ class TreeOpTester(unittest.TestCase):
         assert flag
         
 
+
+    def test_mult_id(self):
+        print("\nTesting mult_id")
+        # be able to work with directories
+        input_files = osjoin('testbench/mult_id', 'inputs')
+        output_files = osjoin('testbench/mult_id', 'outputs')
+        log = []
+        flag = True
+
+        # iterate through sub files
+        for file_name in os.listdir(input_files):
+            # read in the input files
+            current_file_inputs = open(osjoin(input_files, file_name))
+            input_to_test = current_file_inputs.read().strip()
+            current_file_inputs.close()
+
+            # read in the output files
+            current_file_outputs = open(osjoin(output_files, file_name))
+            expected_output = current_file_outputs.read().strip()
+            current_file_outputs.close()
+
+            # build tree and run multiplicitive_identity()
+            tree = BinOpAst(input_to_test.split())
+            tree.multiplicative_identity()
+            actual_output = tree.prefix_str()
+
+            # create a log of everything, this way we can run all tests, even if some fail.
+            log.append((file_name, actual_output, expected_output))
+            if actual_output != expected_output:
+                flag = False
+
+        # print out the log, then assert to see if any part of test failed.
+        for item in log:
+           print(f'{"!FAIL!" if item[1] != item[2] else "Passed"} {item[0]}: {item[1]} = {item[2]}')
+        assert flag
+ 
 
 if __name__ == "__main__":
     unittest.main()
