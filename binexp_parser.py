@@ -162,12 +162,11 @@ class TreeOpTester(unittest.TestCase):
         # be able to work with directories
         input_files = osjoin('testbench/arith_id', 'inputs')
         output_files = osjoin('testbench/arith_id', 'outputs')
-        
+        log = []
+        flag = True
+
         # iterate through sub files
         for file_name in os.listdir(input_files):
-            # print out what tests are being run
-            print(f'testing {file_name}')
-
             # read in the input files
             current_file_inputs = open(osjoin(input_files, file_name))
             input_to_test = current_file_inputs.read().strip()
@@ -183,8 +182,16 @@ class TreeOpTester(unittest.TestCase):
             tree.additive_identity()
             actual_output = tree.prefix_str()
 
-            # test for correctness
-            assert actual_output == expected_output
+            # create a log of everything, this way we can run all tests, even if some fail.
+            log.append((file_name, actual_output, expected_output))
+            if actual_output != expected_output:
+                flag = False
+
+        # print out the log, then assert to see if any part of test failed.
+        for item in log:
+           print(f'{"!FAIL!" if item[1] != item[2] else "Passed"} {item[0]}: {item[1]} = {item[2]}')
+        assert flag
+        
 
 
 if __name__ == "__main__":
