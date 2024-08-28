@@ -170,7 +170,7 @@ class BinOpAst():
             self.right = self.left.right
             self.left = self.left.left
 
-        if self.right.val == '0':
+        elif self.right.val == '0':
             self.val = self.right.val
             self.type = self.right.type
             self.left = self.right.left
@@ -290,7 +290,6 @@ class TreeOpTester(unittest.TestCase):
         # iterate through sub files
         for file_name in os.listdir(input_files):
             # read in the input files
-            print(file_name)                                                                # Debug
             current_file_inputs = open(osjoin(input_files, file_name))
             input_to_test = current_file_inputs.read().strip()
             current_file_inputs.close()
