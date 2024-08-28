@@ -1,4 +1,4 @@
-Implemented arith_id(), mult_id(), and mult_by_zero(), running into a weird error at the moment.
+Implemented arith_id(), mult_id(), and mult_by_zero().
 
 I will definitely be using testing frameworks in the future. It's nice to be able to set it up and let it do the work checking for you. Walking the tree and using join is something else that I believe I will use in the future. 
 
