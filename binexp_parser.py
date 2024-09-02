@@ -91,6 +91,9 @@ class BinOpAst():
         self.left.additive_identity()
         self.right.additive_identity()
 
+        # ;;> It's much better to check if you are a '+' and then proceed. Imagine we add '/' or identifiers or something
+        # ;;> It's going to be a pain to go through and update all of your code
+
         # sort of a different base case, can't do anything with mult (*), but still need to call recursively.
         if self.val == '*':
             return
